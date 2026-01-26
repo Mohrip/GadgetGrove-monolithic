@@ -1,6 +1,7 @@
 package com.GadgetGrove.GadgetGrove.user;
 
 
+import com.GadgetGrove.GadgetGrove.address.AddressDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,13 @@ public class UserService {
     private List<User> userList = new ArrayList<>();
     private Long nextId = 1L;
 
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return userRepository.findAll().stream()
+                .map(this::mapToUserResponse)
+                .toList();
 
-        return userRepository.findAll();
+      //  return userRepository.findAll();
         //return userList;
     }
 
@@ -41,6 +46,29 @@ public class UserService {
                     userRepository.save(existingUser);
             return true;
         }).orElse(false);
+    }
+
+    private UserResponse mapToUserResponse(User user) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setRole(user.getRole());
+        //userResponse.setAddress(user.getAddress());
+       // return userResponse;
+
+        if(user.getAddress() != null) {
+            AddressDTO addressDTO = new AddressDTO();
+            addressDTO.setStreet(user.getAddress().getStreet());
+            addressDTO.setCity(user.getAddress().getCity());
+            addressDTO.setState(user.getAddress().getState());
+            addressDTO.setCountry(user.getAddress().getCountry());
+            addressDTO.setZipCode(user.getAddress().getZipCode());
+            userResponse.setAddress(addressDTO);
+        }
+        return userResponse;
     }
 
 }
