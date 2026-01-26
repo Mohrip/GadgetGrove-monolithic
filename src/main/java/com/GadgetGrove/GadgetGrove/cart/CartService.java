@@ -7,6 +7,7 @@ import com.GadgetGrove.GadgetGrove.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,4 +50,18 @@ public class CartService {
 
         cartItemRepository.save(cartItem);
     }
+
+    public List<CartItem> getCartItemsByUserId(UUID userId) {
+        return cartItemRepository.findAll().stream()
+                .filter(item -> item.getUser().getId().equals(userId))
+                .toList();
+    }
+
+    public void deleteCartItem(UUID cartItemId) {
+        if (!cartItemRepository.existsById(cartItemId)) {
+            throw new RuntimeException("Cart item not found");
+        }
+        cartItemRepository.deleteById(cartItemId);
+    }
+
 }
