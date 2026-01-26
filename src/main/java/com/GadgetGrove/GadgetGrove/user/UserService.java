@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -28,7 +29,7 @@ public class UserService {
         //return userList;
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(UUID id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -38,7 +39,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean updateUser(Long id, User updatedUser) {
+    public boolean updateUser(UUID id, User updatedUser) {
         return userRepository.findById(id)
                 .map(existingUser -> {
                     existingUser.setFirstName(updatedUser.getFirstName());

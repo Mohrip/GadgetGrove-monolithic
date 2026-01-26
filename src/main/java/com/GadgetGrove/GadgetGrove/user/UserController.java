@@ -8,6 +8,7 @@ import com.GadgetGrove.GadgetGrove.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
         User user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
