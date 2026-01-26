@@ -3,7 +3,9 @@ package com.GadgetGrove.GadgetGrove.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,4 +63,47 @@ public class ProductService {
 
         return response;
     }
+
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public ProductResponse getProductById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return mapToResponse(product);
+    }
+
+    public void deleteProduct(UUID id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Product not found");
+        }
+        productRepository.deleteById(id);
+    }
+
+    public List<ProductResponse> searchProductsByName(String name) {
+        return productRepository.findAll().stream()
+                .filter(product -> product.getName() != null && product.getName().toLowerCase().contains(name.toLowerCase()))
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
+private ProductResponse mapToResponse(Product product) {
+    ProductResponse response = new ProductResponse();
+    response.setId(product.getId());
+    response.setName(product.getName());
+    response.setDescription(product.getDescription());
+    response.setPrice(product.getPrice());
+    response.setStockQuantity(product.getStockQuantity());
+    response.setCategory(product.getCategory());
+    response.setImageUrl(product.getImageUrl());
+    response.setActive(product.getActive());
+    return response;
+}
+
+
 }
