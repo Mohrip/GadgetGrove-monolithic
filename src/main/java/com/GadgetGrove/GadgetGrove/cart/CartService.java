@@ -64,4 +64,12 @@ public class CartService {
         cartItemRepository.deleteById(cartItemId);
     }
 
+    public void removeItemFromCart(UUID userId, UUID productId) {
+        Optional<CartItem> cartItemOpt = cartItemRepository.findUserIdAndProductId(userId, productId);
+        if (cartItemOpt.isEmpty()) {
+            throw new RuntimeException("Cart item not found for the given user and product");
+        }
+        cartItemRepository.delete(cartItemOpt.get());
+    }
+
 }
