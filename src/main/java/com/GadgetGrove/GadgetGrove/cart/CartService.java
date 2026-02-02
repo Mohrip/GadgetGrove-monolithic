@@ -65,7 +65,7 @@ public class CartService {
     }
 
     public void removeItemFromCart(UUID userId, UUID productId) {
-        Optional<CartItem> cartItemOpt = cartItemRepository.findUserIdAndProductId(userId, productId);
+        Optional<CartItem> cartItemOpt = cartItemRepository.findByUserIdAndProductId(userId, productId);
         if (cartItemOpt.isEmpty()) {
             throw new RuntimeException("Cart item not found for the given user and product");
         }
