@@ -1,6 +1,5 @@
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -14,10 +13,20 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
-*.iws
+Backend/.idea
+Backend/.idea/
+.idea/
 *.iml
 *.ipr
+out/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+*.db
+*.h2.db
+*.iws
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +40,21 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore application.properties
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/test/resources/application.properties
+src/test/resources/application.yml
+
+# Ignore log files
+logs/
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Ignore environment variables file
+.env
