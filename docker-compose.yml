@@ -8,33 +8,34 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/sb-ecom?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/gadgetgrove
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_S3_BUCKET=${AWS_S3_BUCKET}
     restart: on-failure
 
-
   db:
-    image: mysql:8.0
+    image: postgres:15-alpine
     ports:
-      - "3307:3306"
+      - "5432:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=sb-ecom
+      - POSTGRES_DB=gadgetgrove
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d gadgetgrove"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
 volumes:
-  mysql_data:
+  postgres_data:
